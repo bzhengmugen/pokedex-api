@@ -34,7 +34,7 @@ function handleGetTypes(req, res) {
 }
 
 app.get('/types', handleGetTypes)
-const PORT = process.env.PORT || 8000;
+
 
 function handleGetPokemon(req, res){
     let response = POKEDEX.pokemon;
@@ -54,5 +54,21 @@ function handleGetPokemon(req, res){
 }
 app.get('/pokemon',handleGetPokemon)
 
+
+// 4 parameters in middleware, express knows to treat this as error handler
+app.use((error, req, res, next) => {
+  let response
+  if (process.env.NODE_ENV === 'production') {
+    response = { error: { message: 'server error' }}
+  } else {
+    response = { error }
+  }
+  res.status(500).json(response)
+})
+
+
+
+
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
 });
